@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import step.learning.services.hash.HashService;
+import step.learning.services.random.RandomService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,17 +16,20 @@ import java.io.IOException;
 public class IocServlet extends HttpServlet
 {
     private final HashService hashService;
+    private final RandomService randomService;
 
     @Inject
-    public IocServlet(@Named("Digest-Hash") HashService hashService)
+    public IocServlet(@Named("Digest-Hash") HashService hashService, RandomService randomService)
     {
         this.hashService = hashService;
+        this.randomService = randomService;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        req.setAttribute( "hash", hashService.hash( "123" ) ) ;
+        req.setAttribute("hash", hashService.hash("123"));
+        req.setAttribute("rand", randomService.randomHex(123));
         req.setAttribute( "page-body", "ioc.jsp" ) ;
         req.getRequestDispatcher( "WEB-INF/_layout.jsp" ).forward( req, resp ) ;
     }

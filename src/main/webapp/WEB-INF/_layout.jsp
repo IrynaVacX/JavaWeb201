@@ -1,3 +1,4 @@
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
     String pageBody = (String) request.getAttribute( "page-body" ) ;
@@ -12,7 +13,7 @@
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Site CSS -->
-    <link rel="stylesheet" href="<%= context%>/css/site.css">
+    <link rel="stylesheet" href="<%= context %>/css/site.css?time=<%= new Date().getTime() %>" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
@@ -78,6 +79,6 @@
 
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="<%= context %>/js/site.js"></script>
+<script src="<%= context %>/js/site.js?time=<%= new Date().getTime() %>"></script>
 </body>
 </html>

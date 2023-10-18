@@ -109,26 +109,25 @@ public class RegFormModel
 
     private void setAvatar(FormParseResult result) throws ParseException
     {
-        Map<String, FileItem> files = result.getFiles();
-        if(!files.containsKey("reg-avatar"))
-        {
-            this.avatar = null;
-            return;
+        Map<String, FileItem> files = result.getFiles() ;
+        if( ! files.containsKey( "reg-avatar" ) ) {
+            this.avatar = null ;
+            return ;
         }
-        // ...
-        FileItem item = files.get("reg-avatar");
-        // ...
-        String targetDir = result.getRequest().getServletContext().getRealPath("./upload/avatar/");     // ...
-        String submittedFilename = item.getName();
+        // є переданий файл, обробляємо його
+        FileItem item = files.get( "reg-avatar" ) ;
+        // директорія завантаження файлів (./ - це директорія сервера (Tomcat))
+        String targetDir = result.getRequest()
+                .getServletContext()  // контекст - "оточення" сервлету, з якого дізнаємось файлові шляхи
+                .getRealPath("./upload/avatar/") ;
+        String submittedFilename = item.getName() ;
         String ext = submittedFilename.substring( submittedFilename.lastIndexOf( '.' ) ) ;
         String savedFilename ;
         File savedFile ;
-        do
-        {
+        do {
             savedFilename = UUID.randomUUID().toString().substring(0, 8) + ext ;
             savedFile = new File( targetDir, savedFilename ) ;
-        }
-        while(savedFile.exists());
+        } while( savedFile.exists() ) ;
         // завантажуємо файл
         try {
             item.write( savedFile );
@@ -153,14 +152,7 @@ public class RegFormModel
         this.setEmail(fields.get("reg-email"));
         this.setBirthdate(fields.get("reg-birthdate"));
         this.setIsAgree(fields.get("reg-rules"));
-
         this.setAvatar(result);
-//        Map<String, FileItem> files = result.getFiles();
-//        if( files.containsKey("reg-avatar"))
-//        {
-//            // є переданий файл, обробляємо його
-//            this.setAvatar( files.get("reg-avatar"));
-//        }
     }
 
     public Map<String, String> getErrorMessages()
@@ -177,6 +169,14 @@ public class RegFormModel
         if(name == null || "".equals(name))
         {
             result.put("name", "Ім'я не може бути порожнім");
+        }
+        if(email == null || "".equals(email))
+        {
+            result.put("email", "Email не може бути порожнім");
+        }
+        if(birthdate == null || "".equals(birthdate))
+        {
+            result.put("birthdate", "Birthdate не може бути порожнім");
         }
         return result;
     }

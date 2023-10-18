@@ -55,36 +55,36 @@ public class SignupServlet extends HttpServlet
         req.getRequestDispatcher("WEB-INF/_layout.jsp").forward(req, resp);
     }
 
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-//    {
-//        FormParseResult formParseResult = formParseService.parse(req);
-//        RegFormModel model;
-//        try
-//        {
-//            model = new RegFormModel(formParseResult);
-//        }
-//        catch (ParseException ex)
-//        {
-//            // throw new RuntimeException(ex);
-//            model = null;
-//        }
-//
-//        HttpSession session = req.getSession();
-//
-//        if(model == null)
-//        {
-//            session.setAttribute("reg-status", 0);
-//        }
-//        else if(!model.getErrorMessages().isEmpty())
-//        {
-//            session.setAttribute("reg-model", model);
-//            session.setAttribute("reg-status", 1);
-//        }
-//        else
-//        {
-//            session.setAttribute("reg-status", 2);
-//        }
-//        resp.sendRedirect(req.getRequestURI());
-//    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+        FormParseResult formParseResult = formParseService.parse(req);
+        RegFormModel model;
+        try
+        {
+            model = new RegFormModel(formParseResult);
+        }
+        catch (ParseException ex)
+        {
+            // throw new RuntimeException(ex);
+            model = null;
+        }
+
+        HttpSession session = req.getSession();
+
+        if(model == null)
+        {
+            session.setAttribute("reg-status", 0);
+        }
+        else if(!model.getErrorMessages().isEmpty())
+        {
+            session.setAttribute("reg-model", model);
+            session.setAttribute("reg-status", 1);
+        }
+        else
+        {
+            session.setAttribute("reg-status", 2);
+        }
+        resp.sendRedirect(req.getRequestURI());
+    }
 }

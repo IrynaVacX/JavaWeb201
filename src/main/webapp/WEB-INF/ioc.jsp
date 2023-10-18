@@ -38,7 +38,15 @@
   </li>
 
   <li class="collection-item">
-    Перевіряємо: hash(123) = <%= request.getAttribute("hash") %>
+    <ol class="collection-item">
+      Перевіряємо :
+    </ol>
+    <ol class="collection-item">
+      hash(123) = <%= request.getAttribute("hash") %>
+    </ol>
+    <ol class="collection-item ">
+      rand(123) = <%= request.getAttribute("rand")%>
+    </ol>
   </li>
 
 </ul>

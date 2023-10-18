@@ -15,29 +15,33 @@
             ( errors.containsKey("name") ? "invalid" : "valid" ) ;
     String loginClass = model == null ? "validate" :
             ( errors.containsKey("login") ? "invalid" : "valid" ) ;
+    String emailClass = model == null ? "validate" :
+            ( errors.containsKey("email") ? "invalid" : "valid" ) ;
+    String birthdateClass = model == null ? "validate" :
+            ( errors.containsKey("birthdate") ? "invalid" : "valid" ) ;
+
     String regMessage = (String) request.getAttribute( "reg-message" ) ;
     if( regMessage == null ) { regMessage = "" ; }
 %>
-
 <h2>Реєстрація користувача</h2>
 <p><%= regMessage %></p>
 <div class="row">
-    <form class="col s12" method="post" action="" enctype="multipart/form-data">>
+    <form class="col s12" method="post" action="" enctype="multipart/form-data">
         <div class="row">
             <div class="input-field col s6">
                 <i class="material-icons prefix">badge</i>
                 <input value="<%= loginValue %>" name="reg-login" id="reg-login" type="text" class="<%= loginClass %>">
                 <label for="reg-login">Логін на сайті</label>
-                <% if(errors.containsKey("login")) { %>
-                <span class="helper-text" data-error="wrong"><%= errors.get("login") %></span>
+                <% if( errors.containsKey( "login" ) ) { %>
+                <span class="helper-text" data-error="<%= errors.get("login") %>"></span>
                 <% } %>
             </div>
             <div class="input-field col s6">
                 <i class="material-icons prefix">person</i>
                 <input value="<%= nameValue %>" name="reg-name" id="reg-name" type="text" class="<%= nameClass %>">
                 <label for="reg-name">Реальне ім'я</label>
-                <% if(errors.containsKey("name")) { %>
-                <span class="helper-text" data-error="wrong"><%= errors.get("name") %></span>
+                <% if( errors.containsKey( "name" ) ) { %>
+                <span class="helper-text" data-error="<%= errors.get("name") %>"></span>
                 <% } %>
             </div>
         </div>
@@ -55,26 +59,32 @@
         </div>
         <div class="row">
             <div class="input-field col s6">
-                <i class="material-symbols-outlined prefix">mail</i>
-                <input value="<%= emailValue %>" name="reg-email" id="reg-email" type="email" class="validate">
+                <i class="material-icons prefix">alternate_email</i>
+                <input value="<%= emailValue %>" name="reg-email" id="reg-email" type="email" class="<%= emailClass %>">
                 <label for="reg-email">E-mail</label>
+                <% if( errors.containsKey( "email" ) ) { %>
+                <span class="helper-text" data-error="<%= errors.get("email") %>"></span>
+                <% } %>
             </div>
             <div class="input-field col s6">
                 <i class="material-icons prefix">cake</i>
-                <input value="<%= birthdateValue %>" name="reg-birthdate" id="reg-birthdate" type="date" class="validate">
+                <input value="<%= birthdateValue %>" name="reg-birthdate" id="reg-birthdate" type="date" class="<%= birthdateClass %>">
                 <label for="reg-birthdate">Дата народження</label>
+                <% if( errors.containsKey( "birthdate" ) ) { %>
+                <span class="helper-text" data-error="<%= errors.get("birthdate") %>"></span>
+                <% } %>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s6">
-                <i class="material-icons prefix">fact_check</i>
-                <label>&emsp;
+                <i class="material-icons prefix">receipt_long</i>
+                <label> &emsp;
                     <input name="reg-rules" id="reg-rules" type="checkbox" class="filled-in validate">
                     <span>Не буду нічого порушувати</span>
                 </label>
             </div>
             <div class="file-field input-field col s6">
-                <div class="btn light-green lighten-1">
+                <div class="btn lighten-1" style="background-color: #8FBC8F">
                     <i class="material-icons">account_box</i>
                     <input type="file" name="reg-avatar">
                 </div>
@@ -84,17 +94,9 @@
                 </div>
             </div>
         </div>
-<%--        <div class="row">--%>
-<%--            <div class="input-field col s6">--%>
-
-<%--            </div>--%>
-<%--            <div class="input-field col s6 right-align">--%>
-<%--                <button class="waves-effect waves-light btn darken-1" style="background: #8FBC8F"><i class="material-icons right">how_to_reg</i>Реєстрація</button>--%>
-<%--            </div>--%>
-<%--        </div>--%>
 
         <div class="input-field row right-align">
-            <button class="waves-effect waves-light btn darken-1" style="background: #8FBC8F"><i class="material-icons right">how_to_reg</i>Реєстрація</button>
+            <button class="waves-effect waves-light btn darken-1" style="background-color: #8FBC8F"><i class="material-icons right">how_to_reg</i>Реєстрація</button>
         </div>
     </form>
 </div>

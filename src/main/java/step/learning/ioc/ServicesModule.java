@@ -29,6 +29,9 @@ public class ServicesModule extends AbstractModule
         bind(FormParseService.class).to(MixedFormParseService.class);
 
         bind(DbProvider.class).to(PlanetDbProvider.class);
+        bind( String.class )
+                .annotatedWith( Names.named( "db-prefix" ) )
+                .toInstance( "java201_" ) ;
     }
     private RandomService randomService;
     @Provides
