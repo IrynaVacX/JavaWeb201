@@ -122,6 +122,14 @@ public class RegFormModel
                 .getRealPath("./upload/avatar/") ;
         String submittedFilename = item.getName() ;
         String ext = submittedFilename.substring( submittedFilename.lastIndexOf( '.' ) ) ;
+
+        // hw - check available image extensions
+        if (!ext.equals(".png") && !ext.equals(".jpg"))
+        {
+            this.avatar = null;
+            return;
+        }
+
         String savedFilename ;
         File savedFile ;
         do {

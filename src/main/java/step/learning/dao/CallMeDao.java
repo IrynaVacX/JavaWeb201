@@ -11,27 +11,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 public class CallMeDao
 {
     private final DbProvider dbProvider;
     private final String dbPrefix;
+    private final Logger logger;
     @Inject
-    public CallMeDao(DbProvider dbProvider, @Named("db-prefix") String dbPrefix)
+    public CallMeDao(DbProvider dbProvider, @Named("db-prefix") String dbPrefix, Logger logger)
     {
         this.dbProvider = dbProvider;
         this.dbPrefix = dbPrefix;
+        this.logger = logger;
     }
 
     public List<CallMe> getAll()
     {
         List<CallMe> ret = new ArrayList<>();
-        String sql = "SELECT C.'id', C.'name', C.'phone', C.'moment' FROM " +
-                dbPrefix + "call_me C";
+        String sql = "SELECT C.* FROM " + dbPrefix + "call_me C";
         try(Statement statement = dbProvider.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(sql))
         {
@@ -42,11 +43,10 @@ public class CallMeDao
         }
         catch (SQLException ex)
         {
-//            logger.log(Level.WARNING, ex.getMessage() + " " + sql);
-            System.err.println(ex.getMessage());
+            logger.log(Level.WARNING, String.format("%s | %s", ex.getMessage(), sql));
+            //System.err.println(ex.getMessage());
         }
 
         return ret;
     }
-
 }
