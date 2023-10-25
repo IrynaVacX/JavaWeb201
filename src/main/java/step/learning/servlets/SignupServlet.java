@@ -2,6 +2,7 @@ package step.learning.servlets;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import step.learning.dao.UserDao;
 import step.learning.dto.models.RegFormModel;
 import step.learning.services.formparse.FormParseResult;
 import step.learning.services.formparse.FormParseService;
@@ -18,11 +19,13 @@ import java.text.ParseException;
 public class SignupServlet extends HttpServlet
 {
     private final FormParseService formParseService;
+    private UserDao userDao;
 
     @Inject
-    public SignupServlet(FormParseService formParseService)
+    public SignupServlet(FormParseService formParseService, UserDao userDao)
     {
         this.formParseService = formParseService;
+        this.userDao = userDao;
     }
 
     @Override
@@ -83,6 +86,9 @@ public class SignupServlet extends HttpServlet
         }
         else
         {
+            // стан успішної обробки моделі
+            userDao.addFromForm(model);
+
             session.setAttribute("reg-status", 2);
         }
         resp.sendRedirect(req.getRequestURI());

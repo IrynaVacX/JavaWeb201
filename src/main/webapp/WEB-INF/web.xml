@@ -17,4 +17,10 @@
   <listener>
     <listener-class>step.learning.ioc.IocContextListener</listener-class>
   </listener>
+
+<!--  <listener>-->
+<!--    <param-name>fileEncoding</param-name>-->
+<!--    <param-value>utf-8</param-value>-->
+<!--  </listener>-->
+
 </web-app>

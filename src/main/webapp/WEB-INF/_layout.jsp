@@ -37,6 +37,9 @@
 
             <li <%= pageBody.equals("db.jsp") ? "class='active'" : "" %>
             ><a href="<%= context %>/db">DB</a></li>
+
+            <li <%= pageBody.equals("spa.jsp") ? "class='active'" : "" %>
+            ><a href="<%= context %>/spa">SPA</a></li>
         </ul>
     </div>
 </nav>
@@ -69,16 +72,36 @@
 <div id="auth-modal" class="modal">
     <div class="modal-content">
         <h4>Автентифікація на сайті</h4>
-        <p>A bunch of text</p>
+        <div class="row">
+            <form class="col s12" method="post" action="" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">badge</i>
+                        <input name="reg-login" id="auth-login" type="text" class="validate">
+                        <label for="auth-login">Логін на сайті</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">lock</i>
+                        <input name="auth-password" id="auth-password" type="password" class="validate">
+                        <label for="auth-password">Пароль</label>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="modal-footer">
+        <b id="auth-message"></b>
         <a href="<%= context %>/signup" class="modal-close waves-effect waves-green btn-flat"  style="background: #8FBC8F">Реєстрація</a>
-        <a href="#1" class="modal-close waves-effect waves-green btn-flat" style="background: #a7d9a7">Вхід</a>
+        <a href="#!" id="auth-sign-in"
+           class="waves-effect waves-green btn-flat" style="background: #a7d9a7">Вхід</a>
     </div>
 </div>
 
+
+
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="<%= context %>/js/site.js?time=<%= new Date().getTime() %>"></script>
+<script src="<%= context %>/js/site.js"></script>
+<script src="<%= context %>/js/spa.js?time=<%= new Date().getTime() %>"></script>
 </body>
 </html>

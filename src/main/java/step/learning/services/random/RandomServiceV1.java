@@ -32,6 +32,6 @@ public class RandomServiceV1 implements RandomService
     public void seed(String iv)
     {
         this.iv = iv;
-        random.setSeed(iv == null ? 0 : iv.length());
+        random.setSeed(iv == null ? 0 : Long.parseLong(iv));
     }
 }
