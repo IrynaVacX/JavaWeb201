@@ -21,19 +21,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const spaTokenStatus = document.getElementById("spa-token-status");
     if(spaTokenStatus)
     {
-        const jti = window.localStorage.getItem("jti");
-        // spaTokenStatus.innerText = (!!jti) ? "Встановлено " + jti : "Не встановлено";
-        spaTokenStatus.innerText = (!!jti) ? "Installed " + jti : "Not installed";
-        if(jti)
+        const token = window.localStorage.getItem("token");
+        if(token)
         {
-            fetch('tpl/spa-auth.html')
-                .then(r=>r.text())
-                .then(t =>
-                document.querySelector('auth-part')
-                    .innerHTML = t);
-            document.getElementById("spa-log-out")
-                .addEventListener("click", logoutClick);
+            const tokenObject = JSON.parse(atob(token));
+            // TODO
+            spaTokenStatus.innerText = "Token expires at " + tokenObject.exp;
+            // const appContext = getAppContext();
+            const appContext = window.location.pathname.split('/')[1];
+            fetch(`/${appContext}/tpl/spa-auth.html`)
+                    .then(r=>r.text())
+                    .then(t =>
+                        document.querySelector("auth-part").innerHTML = t);
+                document.getElementById("spa-log-out")
+                    .addEventListener("click", logoutClick);
         }
+        else
+        {
+            spaTokenStatus.innerText = "Not installed";
+        }
+        const spaGetDataButton = document.getElementById("spa-get-data");
+        if( spaGetDataButton )
+            spaGetDataButton.addEventListener('click', spaGetDataClick );
     }
 });
 function spaGetDataClick()
@@ -43,7 +52,7 @@ function spaGetDataClick()
 
 function logoutClick()
 {
-    window.localStorage.removeItem("jti");
+    window.localStorage.removeItem("token");
     window.location.reload();
 }
 function onModalOpens()
@@ -74,18 +83,21 @@ function authSignInButtonClick()
         }
         else
         {
-            r.json().then(j => {
-                if (typeof j.jti === "undefined")
+            r.text().then(base64encodedText => {
+                console.log(base64encodedText);
+
+                const token = JSON.parse(atob(base64encodedText));
+
+                if (typeof token.jti === "undefined")
                 {
                     // authMessage.innerText = "Помилка одержання токену";
                     authMessage.innerText = "Error getting token";
                     return;
                 }
-                authMessage.innerText = "OK";
-                console.log(j);
-                window.localStorage.setItem("jti", j.jti);
+                // authMessage.innerText = "OK";
+                window.localStorage.setItem("token", base64encodedText);
+                window.location.reload();
             });
-            console.log(r);
         }
     });
 }
