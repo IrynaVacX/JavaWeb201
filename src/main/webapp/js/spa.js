@@ -28,8 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // TODO
             spaTokenStatus.innerText = "Token expires at " + tokenObject.exp;
             // const appContext = getAppContext();
-            const appContext = window.location.pathname.split('/')[1];
-            fetch(`/${appContext}/tpl/spa-auth.html`)
+            const appContext = window.location.pathname.split('/')[1] ;
+            fetch(`/${appContext}/tpl/spa-auth.html`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
                     .then(r=>r.text())
                     .then(t =>
                         document.querySelector("auth-part").innerHTML = t);
@@ -48,6 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
 function spaGetDataClick()
 {
     console.log("spaGetDataClick");
+
+    const appContext = window.location.pathname.split('/')[1] ;
+
+    fetch(`/${appContext}/tpl/NP.png`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`
+        }
+    })
+        .then(r=>r.blob())
+        .then(b => {
+            const blobUrl = URL.createObjectURL(b);
+            document.querySelector("auth-part").innerHTML += `<img src="${blobUrl}" />`;
+        });
 }
 
 function logoutClick()
