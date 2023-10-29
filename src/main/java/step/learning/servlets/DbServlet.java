@@ -193,12 +193,17 @@ public class DbServlet extends HttpServlet
             return;
         }
 
-        if(name.length() == 0)
+        if(name.trim().length() == 0)
         {
             resp.setStatus(400);
-            resp.getWriter().print("\"Invalid 'name' field: the field must not be empty");
+            resp.getWriter().print("\"Invalid 'name' field: the field must not be empty\"");
         }
-        if (!Pattern.matches("^\\+380\\d{9}$","+" + phone))
+        if(phone.trim().length() == 0)
+        {
+            resp.setStatus(400);
+            resp.getWriter().print("\"Invalid 'phone' field: the field must not be empty\"");
+        }
+        else if (!Pattern.matches("^\\+380\\d{9}$","+" + phone))
         {
             resp.setStatus(400);
             resp.getWriter().print("\"Invalid 'phone' field: required '+\\d{12}' format\"");
@@ -248,13 +253,13 @@ public class DbServlet extends HttpServlet
         resp.getWriter().print("Patch works");
     }
 
-    //HWHWHW-=-20-10-2023-=-
+
     protected void doLink(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
         String contentType = req.getContentType();
         if(!contentType.startsWith("application/json"))
         {
-            resp.setStatus(415);
+            resp.setStatus(400);
             resp.getWriter().print("\"Unsupported Media Type: 'application/json' only\"");
             return;
         }
@@ -280,7 +285,7 @@ public class DbServlet extends HttpServlet
             return;
         }
 
-        String sql = "update " + dbPrefix + "call_me set call_moment=? where id=?";
+        String sql = "UPDATE " + dbPrefix + "call_me SET call_moment=? WHERE id=?";
         Timestamp callTimestamp;
         try(PreparedStatement statement = dbProvider.getConnection().prepareStatement(sql))
         {

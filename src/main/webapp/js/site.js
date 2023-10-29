@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const readButton = document.getElementById("db-read-button");
     if(readButton) readButton.addEventListener('click', readButtonClick);
+
+    const showAllButton = document.getElementById("db-show-all-button");
+    if(showAllButton) showAllButton.addEventListener('click',showAllButtonClick);
 });
 
 function createButtonClick(){
