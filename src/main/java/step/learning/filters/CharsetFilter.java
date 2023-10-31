@@ -5,8 +5,10 @@ import com.google.inject.Singleton;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @Singleton
 public class CharsetFilter implements Filter
@@ -33,6 +35,19 @@ public class CharsetFilter implements Filter
         resp.setCharacterEncoding(charsetName);
         // для передачі даних далі по ланці використовуємо атрибути
         req.setAttribute("charsetName", charsetName);
+
+
+        ////////////////////////////////////////////////////////////////
+        HttpSession httpSession = req.getSession();
+        String user = (String) httpSession.getAttribute("user");
+        if(user == null)
+        {
+            user = UUID.randomUUID().toString().substring(0,4);
+            httpSession.setAttribute("user", user);
+        }
+        req.setAttribute("user", user);
+        ////////////////////////////////////////////////////////////////
+
 
         // передача роботи по ланцюгу
         filterChain.doFilter(servletRequest, servletResponse);

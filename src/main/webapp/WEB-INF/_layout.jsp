@@ -40,6 +40,9 @@
 
             <li <%= pageBody.equals("spa.jsp") ? "class='active'" : "" %>
             ><a href="<%= context %>/spa">SPA</a></li>
+
+            <li <%= pageBody.equals("ws.jsp") ? "class='active'" : "" %>
+            ><a href="<%= context %>/ws">WS</a></li>
         </ul>
     </div>
 </nav>
