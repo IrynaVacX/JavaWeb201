@@ -50,13 +50,18 @@ document.addEventListener("DOMContentLoaded", () => {
             spaGetDataButton.addEventListener('click', spaGetDataClick );
     }
 });
+
+function getAppContext(){
+    return '/' + window.location.pathname.split('/')[1];
+}
+
 function spaGetDataClick()
 {
     console.log("spaGetDataClick");
 
-    const appContext = window.location.pathname.split('/')[1] ;
+    const appContext = getAppContext();
 
-    fetch(`/${appContext}/tpl/NP.png`, {
+    fetch(`${appContext}/tpl/NP.png`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${window.localStorage.getItem("token")}`
@@ -91,8 +96,8 @@ function authSignInButtonClick()
         // authMessage.innerText = "Логін не може бути порожнім";
         authMessage.innerText = "Login cannot be empty";
     }
-    const appContext = window.location.pathname.split('/')[1] ;
-    fetch(`/${appContext}/auth?login=${authLogin.value}&password=${authPassword.value}`, {
+    const appContext = getAppContext();
+    fetch(`${appContext}/auth?login=${authLogin.value}&password=${authPassword.value}`, {
         method:'GET'
     }).then(r => {
         if(r.status !== 200)
@@ -115,7 +120,14 @@ function authSignInButtonClick()
                 }
                 // authMessage.innerText = "OK";
                 window.localStorage.setItem("token", base64encodedText);
-                window.location.reload();
+                if(appContext.includes("/spa"))
+                {
+                    window.location.reload();
+                }
+                else
+                {
+                    window.location.replace(getAppContext() + "/spa");
+                }
             });
         }
     });

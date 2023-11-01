@@ -36,8 +36,9 @@ public class ChatDao
         }
 
         String sql = "INSERT INTO " + dbPrefix + "chat (user, message) " +
-                     "VALUES (?,?)";
-        try(PreparedStatement prep= dbProvider.getConnection().prepareStatement(sql)) {
+                     "VALUES (?,?) ";
+        try(PreparedStatement prep= dbProvider.getConnection().prepareStatement(sql))
+        {
             prep.setString(1, chatMessage.getUser());
             prep.setString(2, chatMessage.getMessage());
             prep.executeUpdate();
@@ -51,7 +52,7 @@ public class ChatDao
     public boolean install()
     {
         String sql = "CREATE TABLE " + dbPrefix + "chat (" +
-                "user   CHAR(6)     PRIMARY KEY, " +
+                "user BIGINT UNSIGNED PRIMARY KEY, " +
                 "message    TEXT, " +
                 "moment     DATETIME    DEFAULT CURRENT_TIMESTAMP " +
                 ") ENGINE = INNODB, DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci";

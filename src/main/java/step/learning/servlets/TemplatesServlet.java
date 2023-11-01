@@ -34,8 +34,6 @@ public class TemplatesServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-//        hw
-
         // cw 27/10/23
         String authHeader = req.getHeader("Authorization");
         if (authHeader == null)

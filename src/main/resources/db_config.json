@@ -4,8 +4,8 @@
     "PlanetScale":
     {
       "url": "jdbc:mysql://aws.connect.psdb.cloud/asp-201?sslMode=VERIFY_IDENTITY",
-      "user": "9tvcy3avbj52wxzeccg4",
-      "password": "pscale_pw_AixPjQoU2dh9W78jlBWxGzlAfOFNwbFjLwhyd1Xvb9A"
+      "user": "sjee49gp8kcpq1i66ajz",
+      "password": "pscale_pw_UuJUSV1JHpR7h2lr39PKyws2inAfP3bkWIUpJsKOiyg"
     }
   }
 }

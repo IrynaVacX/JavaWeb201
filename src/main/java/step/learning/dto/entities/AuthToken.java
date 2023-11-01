@@ -11,6 +11,7 @@ public class AuthToken
     private String sub;
     private Date exp;
     private Date iat;
+    private String nik;
 
     public AuthToken() { }
 
@@ -23,6 +24,11 @@ public class AuthToken
         this.setExp(moment == null ? null : new Date(moment.getTime()));
         moment = resultSet.getTimestamp("iat");
         this.setIat(moment == null ? null : new Date(moment.getTime()));
+        try
+        {
+            this.nik = resultSet.getString("nik");
+        }
+        catch (Exception ignored){}
     }
 
     // region accessors
@@ -49,6 +55,12 @@ public class AuthToken
     }
     public void setIat(Date iat) {
         this.iat = iat;
+    }
+    public String getNik() {
+        return nik;
+    }
+    public void setNik(String nik) {
+        this.nik = nik;
     }
     //endregion
 }

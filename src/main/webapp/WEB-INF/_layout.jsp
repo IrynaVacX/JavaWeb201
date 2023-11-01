@@ -95,7 +95,7 @@
     <div class="modal-footer">
         <b id="auth-message"></b>
         <a href="<%= context %>/signup" class="modal-close waves-effect waves-green btn-flat"  style="background: #8FBC8F">Реєстрація</a>
-        <a href="#!" id="auth-sign-in"
+        <a id="auth-sign-in"
            class="waves-effect waves-green btn-flat" style="background: #a7d9a7">Вхід</a>
     </div>
 </div>

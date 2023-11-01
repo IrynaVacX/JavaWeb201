@@ -8,10 +8,10 @@ public class ChatMessage
     private String message;
     private Date moment;
 
+    public ChatMessage() { }
     public ChatMessage(String user, String message) {
         this.user = user;
         this.message = message;
-//        this.moment = new Date();
     }
 
     //#region accessors
@@ -29,9 +29,6 @@ public class ChatMessage
     }
     public Date getMoment() {
         return moment;
-    }
-    public void setMoment(Date moment) {
-        this.moment = moment;
     }
     //#endregion
 }
