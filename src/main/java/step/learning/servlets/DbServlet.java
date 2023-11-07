@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 @Singleton
 public class DbServlet extends HttpServlet
@@ -70,6 +73,8 @@ public class DbServlet extends HttpServlet
                 doLink(req, resp);
                 break;
             }
+            case "MOVE": doMove(req,resp); break;
+            case "PURGE": doPurge(req,resp); break;
             default: super.service(req, resp);
         }
     }
@@ -120,9 +125,9 @@ public class DbServlet extends HttpServlet
                 "`id`             BIGINT UNSIGNED PRIMARY KEY," +
                 "`name`           VARCHAR(64) NULL," +
                 "`phone`          CHAR(13)    NOT NULL COMMENT '+38 098 765 43 21'," +
-                "`moment`         DATETIME    DEFAULT CURRENT_TIMESTAMP" +
-                "`call_moment`    DATETIME    NULL" +
-                "`delete_moment`  DATETIME    NULL" +
+                "`moment`         DATETIME    DEFAULT CURRENT_TIMESTAMP, " +
+                "`call_moment`    DATETIME    NULL, " +
+                "`delete_moment`  DATETIME    NULL " +
                 ") ENGINE = InnoDB DEFAULT CHARSET = UTF8";
         try (Statement statement = dbProvider.getConnection().createStatement()){
             statement.executeUpdate(sql);
@@ -254,61 +259,170 @@ public class DbServlet extends HttpServlet
     }
 
 
+//    protected void doLink(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+//    {
+//        String contentType = req.getContentType();
+//        if(!contentType.startsWith("application/json"))
+//        {
+//            resp.setStatus(400);
+//            resp.getWriter().print("\"Unsupported Media Type: 'application/json' only\"");
+//            return;
+//        }
+//
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        byte[] buffer = new byte[4096];
+//        int len;
+//        String json;
+//
+//        try(InputStream body = req.getInputStream())
+//        {
+//            while ((len = body.read(buffer)) > 0)
+//            {
+//                bytes.write(buffer, 0, len);
+//            }
+//            json = bytes.toString(StandardCharsets.UTF_8.name());
+//        }
+//        catch (Exception ex)
+//        {
+//            System.err.println(ex.getMessage());
+//            resp.setStatus(500);
+//            resp.getWriter().print("\"Server error\"");
+//            return;
+//        }
+//
+//        String sql = "UPDATE " + dbPrefix + "call_me SET call_moment=? WHERE id=?";
+//        Timestamp callTimestamp;
+//        try(PreparedStatement statement = dbProvider.getConnection().prepareStatement(sql))
+//        {
+//            JsonObject result = JsonParser.parseString(json).getAsJsonObject();
+//            long id = result.get("id").getAsLong();
+//            callTimestamp = new Timestamp(new Date().getTime());
+//            statement.setTimestamp(1, callTimestamp);
+//            statement.setLong(2, id);
+//            statement.execute();
+//        }
+//        catch (Exception ex)
+//        {
+//            System.err.println(ex.getMessage());
+//            resp.setStatus(500);
+//            resp.getWriter().print("\"Server error\"");
+//            return;
+//        }
+//
+//        Gson gson = new GsonBuilder().create();
+//        JsonObject response = new JsonObject();
+//        response.addProperty("timestamp", callTimestamp.getTime());
+//
+//        resp.setHeader("Content-Type", "application/json");
+//        resp.getWriter().print(gson.toJson(response));
+//    }
+
     protected void doLink(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        String contentType = req.getContentType();
-        if(!contentType.startsWith("application/json"))
+        resp.setContentType("application/json");
+        String callId = req.getParameter("call-id");
+        if( callId == null)
         {
             resp.setStatus(400);
-            resp.getWriter().print("\"Unsupported Media Type: 'application/json' only\"");
+            resp.getWriter().print("\"Missing required parameter 'call-id' \"");
             return;
         }
-
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
-        int len;
-        String json;
-
-        try(InputStream body = req.getInputStream())
+        CallMe item = callMeDao.getById(callId);
+        if(item == null)
         {
-            while ((len = body.read(buffer)) > 0)
-            {
-                bytes.write(buffer, 0, len);
-            }
-            json = bytes.toString(StandardCharsets.UTF_8.name());
+            resp.setStatus(404);
+            resp.getWriter().print("\"Item not found for given parameter 'call-id' \"");
+            return;
         }
-        catch (Exception ex)
+        if(item.getCallMoment() != null){
+            resp.setStatus(422);
+            resp.getWriter().print("\"Unprocessable Content: Item was processed early \"");
+            return;
+        }
+        if(callMeDao.updateCallMoment(item)){
+            resp.setStatus(202);
+            resp.getWriter().print(new Gson().toJson(item));
+        }
+        else
         {
-            System.err.println(ex.getMessage());
             resp.setStatus(500);
-            resp.getWriter().print("\"Server error\"");
+            resp.getWriter().print("\"Server error. Details on server's logs \"");
             return;
         }
+    }
 
-        String sql = "UPDATE " + dbPrefix + "call_me SET call_moment=? WHERE id=?";
-        Timestamp callTimestamp;
-        try(PreparedStatement statement = dbProvider.getConnection().prepareStatement(sql))
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String callId = req.getParameter("call-id");
+        if( callId == null)
         {
-            JsonObject result = JsonParser.parseString(json).getAsJsonObject();
-            long id = result.get("id").getAsLong();
-            callTimestamp = new Timestamp(new Date().getTime());
-            statement.setTimestamp(1, callTimestamp);
-            statement.setLong(2, id);
-            statement.execute();
+            resp.setStatus(400);
+            resp.getWriter().print("\"Missing required parameter 'call-id' \"");
+            return;
         }
-        catch (Exception ex)
+        CallMe item = callMeDao.getById(callId);
+        if(item == null)
         {
-            System.err.println(ex.getMessage());
+            resp.setStatus(404);
+            resp.getWriter().print("\"Item not found for given parameter 'call-id' \"");
+            return;
+        }
+        if(item.getDeleteMoment() != null){
+            resp.setStatus(422);
+            resp.getWriter().print("\"Unprocessable Content: Item was processed early \"");
+            return;
+        }
+        if(callMeDao.delete(item)){
+            resp.setStatus(202);
+            resp.getWriter().print("\"Operation completed\"");
+        }
+        else
+        {
             resp.setStatus(500);
-            resp.getWriter().print("\"Server error\"");
+            resp.getWriter().print("\"Server error. Details on server's logs \"");
             return;
         }
 
+    }
+
+    protected void doPurge(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<CallMe> calls = callMeDao.getAll(true);
         Gson gson = new GsonBuilder().create();
-        JsonObject response = new JsonObject();
-        response.addProperty("timestamp", callTimestamp.getTime());
+        resp.getWriter().print(gson.toJson(calls));
+    }
 
-        resp.setHeader("Content-Type", "application/json");
-        resp.getWriter().print(gson.toJson(response));
+    protected void doMove(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        resp.setContentType("application/json");
+        String callId = req.getParameter("call-id");
+        if( callId == null)
+        {
+            resp.setStatus(400);
+            resp.getWriter().print("\"Missing required parameter 'call-id' \"");
+            return;
+        }
+        CallMe item = callMeDao.getById(callId,true);
+        if(item == null)
+        {
+            resp.setStatus(404);
+            resp.getWriter().print("\"Item not found for given parameter 'call-id' \"");
+            return;
+        }
+        if(item.getDeleteMoment() == null){
+            resp.setStatus(422);
+            resp.getWriter().print("\"Unprocessable Content: Item was processed early \"");
+            return;
+        }
+        if(callMeDao.restore(item)){
+            resp.setStatus(202);
+            resp.getWriter().print("\"Operation completed\"");
+        }
+        else
+        {
+            resp.setStatus(500);
+            resp.getWriter().print("\"Server error. Details on server's logs \"");
+            return;
+        }
     }
 }

@@ -9,9 +9,17 @@
 <p>
     Наявність токену на сторінці : <b id="spa-token-status"></b>
 </p>
-<auth-part></auth-part>
 <button class="btn" style="background-color: #8FBC8F; margin: 10px;" id="spa-get-data">
-    <i class="material-icons">Дані</i></button>
+    <i class="material-icons">folder_special</i></button>
+
+<button class="btn" style="background-color: #8FBC8F; margin: 10px;" id="spa-get-data2">
+    <i class="material-icons">folder_special</i></button>
+<button class="btn" style="background-color: #8FBC8F; margin: 10px;" id="spa-get-data3">
+    <i class="material-icons">folder_special</i></button>
+<button class="btn" style="background-color: #8FBC8F; margin: 10px;" id="spa-get-data4">
+    <i class="material-icons">error</i></button>
+
 <button class="btn" style="background-color: #8FBC8F; margin: 10px" id="spa-log-out">
     <i class="material-icons">Вихід</i></button>
 <br/>
+<auth-part></auth-part>

@@ -46,8 +46,21 @@ document.addEventListener("DOMContentLoaded", () => {
             spaTokenStatus.innerText = "Not installed";
         }
         const spaGetDataButton = document.getElementById("spa-get-data");
-        if( spaGetDataButton )
+        if( spaGetDataButton ) {
             spaGetDataButton.addEventListener('click', spaGetDataClick );
+        }
+        const spaGetDataButton2 = document.getElementById("spa-get-data2");
+        if (spaGetDataButton2) {
+            spaGetDataButton2.addEventListener('click', spaGetDataClick2);
+        }
+        const spaGetDataButton3 = document.getElementById("spa-get-data3");
+        if (spaGetDataButton3) {
+            spaGetDataButton3.addEventListener('click', spaGetDataClick3);
+        }
+        const spaGetDataButton4 = document.getElementById("spa-get-data4");
+        if (spaGetDataButton4) {
+            spaGetDataButton4.addEventListener('click', spaGetDataClick4);
+        }
     }
 });
 
@@ -57,11 +70,7 @@ function getAppContext(){
 
 function spaGetDataClick()
 {
-    console.log("spaGetDataClick");
-
-    const appContext = getAppContext();
-
-    fetch(`${appContext}/tpl/NP.png`, {
+    fetch(`${getAppContext()}/tpl/data1.png`,{
         method: "GET",
         headers: {
             "Authorization": `Bearer ${window.localStorage.getItem("token")}`
@@ -69,9 +78,81 @@ function spaGetDataClick()
     })
         .then(r=>r.blob())
         .then(b => {
-            const blobUrl = URL.createObjectURL(b);
-            document.querySelector("auth-part").innerHTML += `<img src="${blobUrl}" />`;
+            const dt = document.getElementById("dt1");
+            if(dt == undefined)
+            {
+                const blobUrl = URL.createObjectURL(b);
+                document.querySelector("auth-part").innerHTML +=
+                    `<div id="dt1" style="display: grid"><img src="${blobUrl}" width="200"/><i>data-1</i></div>`;
+            }
+            else
+            {
+                dt.remove();
+            }
+    });
+}
+function spaGetDataClick2()
+{
+    console.log("spaGetDataClick2");
+    fetch(`${getAppContext()}/tpl/data2.png`,{
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`
+        }
+    })
+        .then(r=>r.blob())
+        .then(b => {
+            const dt2 = document.getElementById("dt2");
+            if(dt2 == undefined)
+            {
+                const blobUrl = URL.createObjectURL(b);
+                document.querySelector("auth-part").innerHTML +=
+                    `<div id="dt2" style="display: grid"><img src="${blobUrl}" width="200"/><i>data-2</i></div>`;
+            }
+            else
+            {
+                dt2.remove();
+            }
         });
+}
+function spaGetDataClick3()
+{
+    console.log("spaGetDataClick3");
+    fetch(`${getAppContext()}/tpl/data3.png`,{
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("token")}`
+        }
+    })
+        .then(r=>r.blob())
+        .then(b => {
+            const dt = document.getElementById("dt3");
+            if(dt == undefined)
+            {
+                const blobUrl = URL.createObjectURL(b);
+                document.querySelector("auth-part").innerHTML +=
+                    `<div id="dt3" style="display: grid"><img src="${blobUrl}" width="200"/><i>data-3</i></div>`;
+            }
+            else
+            {
+                dt.remove();
+            }
+        });
+}
+function spaGetDataClick4()
+{
+    console.log("spaGetDataClick4");
+    fetch(`${getAppContext()}/tpl/`,{
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem('token')}`
+        }
+    }).then(r=>{
+        if(r.status === 404)
+        {
+            document.querySelector("auth-part").innerHTML = `ERROR 404<br/>`;
+        }
+    })
 }
 
 function logoutClick()

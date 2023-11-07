@@ -74,8 +74,12 @@
 </p>
 <div class="row">
     <button id="db-read-button"
-    class="waves-effect waves-light btn" style="background-color: #8FBC8F">
+            class="waves-effect waves-light btn" style="background-color: #8FBC8F">
         <i class="material-icons right">view_list</i>
     Переглянути замовлення</button>
+    <button id="db-show-all-button"
+            class="waves-effect waves-light btn lighten-2" style="background-color: #a7d9a7">
+        <i class="material-icons right">view_list</i>
+        Переглянути усі замовлення</button>
 </div>
 <div id="calls-container"></div>
